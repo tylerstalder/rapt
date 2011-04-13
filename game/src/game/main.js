@@ -367,6 +367,15 @@ $(document).ready(function() {
 
 	tick();
 	setInterval(tick, 1000 / 60);
+	
+	// Create SocketIO instance
+	var socket = new io.Socket('localhost',{
+		port: 8080
+	});
+	socket.connect();
+
+	socket.on('message',function(data) {
+		level.keyDown(data);
 });
 
 $('.key.changeable').live('mousedown', function(e) {
@@ -391,6 +400,7 @@ $(document).keydown(function(e) {
 	if (!e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
 		menu.keyDown(e);
 		level.keyDown(e);
+		socket.send(e.which);
 
 		if (e.which === ESCAPE_KEY) {
 			// escape returns the player to the level select page
